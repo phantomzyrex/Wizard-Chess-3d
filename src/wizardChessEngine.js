@@ -4747,6 +4747,49 @@ export function initWizardChess() {
     document.getElementById('btn-hide-ui')?.addEventListener('click', () => toggleUI());
     document.getElementById('btn-audio-toggle')?.addEventListener('click', () => toggleAudioMute());
 
+    // Start looping background music on first user gesture anywhere in the window
+    const unlockAudioOnce = () => {
+      sanctumAudio.unlock();
+    };
+    window.addEventListener('pointerdown', unlockAudioOnce, { passive: true });
+    window.addEventListener('keydown', unlockAudioOnce, { passive: true });
+
+    // Optional custom audio file picker & window drag-and-drop for direct MP3/WAV loop replacement
+    const bgmFileInput = document.getElementById('input-bgm-file');
+    document.getElementById('btn-bgm-upload')?.addEventListener('click', () => {
+      bgmFileInput?.click();
+    });
+    bgmFileInput?.addEventListener('change', async (ev) => {
+      const target = /** @type {HTMLInputElement} */ (ev.target);
+      const file = target?.files?.[0];
+      if (file) {
+        const ok = await sanctumAudio.loadUserAudioFile(file);
+        const btnUpload = document.getElementById('btn-bgm-upload');
+        if (ok && btnUpload) {
+          btnUpload.textContent = 'Custom Track ♪';
+          btnUpload.classList.add('active');
+        }
+      }
+    });
+
+    window.addEventListener('dragover', (ev) => {
+      if (ev.dataTransfer?.types?.includes('Files')) {
+        ev.preventDefault();
+      }
+    });
+    window.addEventListener('drop', async (ev) => {
+      const file = ev.dataTransfer?.files?.[0];
+      if (file && (file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name))) {
+        ev.preventDefault();
+        const ok = await sanctumAudio.loadUserAudioFile(file);
+        const btnUpload = document.getElementById('btn-bgm-upload');
+        if (ok && btnUpload) {
+          btnUpload.textContent = 'Custom Track ♪';
+          btnUpload.classList.add('active');
+        }
+      }
+    });
+
     document.getElementById('btn-script-modal')?.addEventListener('click', () => openLobbyModal('script'));
     document.getElementById('btn-script-prev')?.addEventListener('click', () => stepScriptBackward());
     document.getElementById('btn-script-next')?.addEventListener('click', () => stepScriptForward());

@@ -194,11 +194,27 @@ export default function App() {
           <button
             className="hud-btn active"
             id="btn-audio-toggle"
-            title="Toggle Cathedral &amp; Stone Sound Effects (Shortcut: M)"
+            title="Toggle Background Music &amp; Stone Sound Effects (Shortcut: M)"
             onClick={() => setMobileSheetOpen(false)}
           >
             Sound: On [M]
           </button>
+
+          <button
+            type="button"
+            className="hud-btn"
+            id="btn-bgm-upload"
+            title="Load a custom MP3/WAV file (or drag &amp; drop an audio file onto the window) to loop as background music"
+            onClick={() => setMobileSheetOpen(false)}
+          >
+            Music ♪
+          </button>
+          <input
+            type="file"
+            id="input-bgm-file"
+            accept="audio/*"
+            hidden
+          />
 
           <button
             className="hud-btn"
