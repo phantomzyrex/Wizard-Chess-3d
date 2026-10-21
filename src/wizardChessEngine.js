@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { createSanctumAudioEngine } from './sanctumAudio.js';
+import { createDeveloper3DMonument } from './developerTag3D.js';
 
 /** @type {any} */
 const THREE = THREE_NS;
@@ -937,6 +938,7 @@ export function initWizardChess() {
     }
 
     buildChessBoardGrid();
+    const developerMonument = createDeveloper3DMonument(scene, renderer);
 
     // =========================================================================
     // Native Baked Wall/Column Stone (Original Ashlar) & Floor Stone (Abbey Flagstone)
@@ -5481,6 +5483,10 @@ export function initWizardChess() {
           rp.mat.dispose();
           activeGroundRipples.splice(i, 1);
         }
+      }
+
+      if (developerMonument) {
+        developerMonument.update(elapsedTotal, camera);
       }
 
       // Subtle organic breathing on active square highlights so valid moves shimmer softly on the altar
